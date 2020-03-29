@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+    nginx:
+        build: ./.dockerfiles/nginx
+        environment:
+            - TZ=Europe/Moscow
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./conf.d/nginx/conf.d:/root/bin/nginx/etc/conf.d
+            - ./conf.d/nginx/sites-enabled:/root/bin/nginx/etc/sites-enabled
+            - ./conf.d/certbot:/root/bin/nginx/etc/certbot
+            - ./html:/root/bin/nginx/html
+            - ./log/nginx:/root/bin/nginx/log
+        links:
+            - php-fpm
+        restart: unless-stopped
+    
+    php-fpm:
+        build: ./.dockerfiles/php-fpm
+        environment:
+            - TZ=Europe/Moscow
+        #ports:
+        #    - "9000:9000"
+        volumes:
+            - ./html:/root/bin/nginx/html
+            - ./conf.d/php-fpm/php-fpm.d:/root/bin/php-fpm/etc/php-fpm.d
+            - ./conf.d/php-fpm/ini:/root/bin/php-fpm/lib
+        restart: unless-stopped
+    
+    mariadb:
+        image: linuxserver/mariadb:latest
+        environment:
+            - MYSQL_ROOT_PASSWORD=GfZgxY2p
+            - TZ=Europe/Moscow
+            #- MYSQL_DATABASE=test_db
+            #- MYSQL_USER=test_user
+            #- MYSQL_PASSWORD=test_pwd
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./conf.d/mariadb:/config
+        restart: unless-stopped
+
