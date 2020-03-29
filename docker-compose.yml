@@ -33,7 +33,7 @@ services:
     mariadb:
         image: linuxserver/mariadb:latest
         environment:
-            - MYSQL_ROOT_PASSWORD=GfZgxY2p
+            - MYSQL_ROOT_PASSWORD=
             - TZ=Europe/Moscow
             #- MYSQL_DATABASE=test_db
             #- MYSQL_USER=test_user
